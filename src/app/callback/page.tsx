@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
-//const CallbackPage = (searchParams) => {
-//CallbackPage with searchParams (query params)
+
 const CallbackPage = async ({
   params,
   searchParams,
@@ -9,7 +9,6 @@ const CallbackPage = async ({
   params: { slug: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-
 
   //I check the state with the cookie
   const cookieStore = cookies()
@@ -20,7 +19,7 @@ const CallbackPage = async ({
   if (state){
     const authSSOServer = process.env.AUTH_SSO_SERVER || 'http://localhost:3000';
 
-    const response = await fetch(`${authSSOServer}/api/auth/verify/state`, {
+    const response = await fetch(`${authSSOServer}/api/auth/verify-state`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,17 +27,9 @@ const CallbackPage = async ({
       body: JSON.stringify({ state }),
     });
 
-    console.log('response', response)
 
-    if (response.status === 200) {
-      return (
-        <div>
-          <h1>Dashboard</h1>
-          <p>Access Token: {accessToken ? accessToken.value : 'No access token available'}</p>
-          <p>State: {state}</p>
-        </div>
-      );
-
+    if (response.status === 200 && accessToken?.value) {
+      redirect('/dashboard');
     } else {
       return (
         <div>

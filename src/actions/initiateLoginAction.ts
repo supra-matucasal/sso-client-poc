@@ -15,7 +15,6 @@ export async function initiateLoginAction() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        "origin": "http://localhost:4000"
       },
       body: JSON.stringify({ redirect: redirectUrl, token: secretToken, state: state }),
     });
