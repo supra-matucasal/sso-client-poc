@@ -17,7 +17,7 @@ const CallbackPage = async ({
   const state = searchParams?.state;
 
   if (state){
-    const authSSOServer = process.env.AUTH_SSO_SERVER || 'http://localhost:3000';
+    const authSSOServer = process.env.AUTH_SSO_SERVER;
 
     const response = await fetch(`${authSSOServer}/api/auth/verify-state`, {
       method: 'POST',

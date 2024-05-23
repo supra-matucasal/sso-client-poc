@@ -3,7 +3,12 @@ import { cookies } from 'next/headers'
 const DashboardPage = () => {
 
   const cookieStore = cookies()
-  const accessToken = cookieStore.get('sso-token')
+  const cookieName = process.env.COOKIE_NAME;
+
+  if(!cookieName) {
+    return <div>Cookie name not found</div>
+  }
+  const accessToken = cookieStore.get(cookieName)
 
 
   return (

@@ -3,9 +3,18 @@
 import { randomBytes } from 'crypto';
 
 export async function initiateLoginAction() {
-  const redirectUrl = process.env.AUTH_REDIRECT_URL || 'http://localhost:4000/api/callback';
-  const secretToken = process.env.TOKEN_EXTERNAL_APPS || 'token';
-  const authSSOServer = process.env.AUTH_SSO_SERVER || 'http://localhost:3000';
+
+  console.log('process.env.AUTH_REDIRECT_URL: ', process.env.AUTH_REDIRECT_URL)
+  console.log('process.env.TOKEN_EXTERNAL_APPS: ', process.env.TOKEN_EXTERNAL_APPS)
+  console.log('process.env.AUTH_SSO_SERVER; ', process.env.AUTH_SSO_SERVER)
+
+  const redirectUrl = process.env.AUTH_REDIRECT_URL;
+  const secretToken = process.env.TOKEN_EXTERNAL_APPS;
+  const authSSOServer = process.env.AUTH_SSO_SERVER;
+
+  if (!redirectUrl || !secretToken || !authSSOServer) {
+    throw new Error('Missing environment variables');
+  }
 
   const state = randomBytes(16).toString('hex');
 
