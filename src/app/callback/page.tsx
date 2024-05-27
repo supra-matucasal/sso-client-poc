@@ -1,8 +1,9 @@
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+"use client"
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'
 
 
-const CallbackPage = async ({
+const CallbackPage = ({
   params,
   searchParams,
 }: {
@@ -10,34 +11,51 @@ const CallbackPage = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  //I check the state with the cookie
-  const cookieStore = cookies()
-  const accessToken = cookieStore.get('sso-token')
+  const state = searchParams?.state || '';
+  const tempToken = searchParams?.tempToken || '';
 
-  const state = searchParams?.state;
-
-  if (state){
-    const authSSOServer = process.env.AUTH_SSO_SERVER;
-
-    const response = await fetch(`${authSSOServer}/api/auth/verify-state`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ state }),
-    });
+  const router = useRouter()
 
 
-    if (response.status === 200 && accessToken?.value) {
-      redirect('/dashboard');
-    } else {
-      return (
-        <div>
-          <h1>Unauthorized access</h1>
-        </div>
-      );
+  const [accessToken, setAccessToken] = useState('');
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const authSSOServer = process.env.NEXT_PUBLIC_AUTH_SSO_SERVER;
+
+      //Verifying the state
+      const getTokenResponse = await fetch(`${authSSOServer}/api/auth/token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tempToken }),
+      });
+
+      if (getTokenResponse.status === 200) {
+        const { accessToken } = await getTokenResponse.json();
+        setAccessToken(accessToken);
+
+        const setCookie = await fetch('/api/auth/set-cookie', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ accessToken }),
+        });
+
+        if (setCookie.status === 200) {
+          router.push('/dashboard');
+        }
+      }
+    };
+
+    if (state && tempToken) {
+      fetchToken();
     }
-  } else {
+  }, [state, tempToken, router]);
+
+  if (!state) {
     return (
       <div>
         <h1>State is required</h1>
@@ -45,7 +63,19 @@ const CallbackPage = async ({
     );
   }
 
-  
+  if (!accessToken) {
+    return (
+      <div>
+        <h1>Unauthorized access</h1>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h1>Access granted: {accessToken}</h1>
+    </div>
+  );
 };
 
 export default CallbackPage;
