@@ -12,7 +12,7 @@ const CallbackPage = ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  const state = searchParams?.state || '';
+  //const state = searchParams?.state || '';
   const tempToken = searchParams?.tempToken || '';
 
   const router = useRouter()
@@ -24,7 +24,7 @@ const CallbackPage = ({
     const fetchToken = async () => {
       const authSSOServer = process.env.NEXT_PUBLIC_AUTH_SSO_SERVER;
 
-      //Verifying the state
+      //Verifying the temp token
       const getTokenResponse = await fetch(`${authSSOServer}/api/auth/token`, {
         method: 'POST',
         headers: {
@@ -61,19 +61,12 @@ const CallbackPage = ({
       }
     };
 
-    if (state && tempToken) {
+    if (tempToken) {
       fetchToken();
     }
-  }, [state, tempToken, router]);
+  }, [tempToken, router]);
 
-  if (!state) {
-    return (
-      <div>
-        <h1>State is required</h1>
-      </div>
-    );
-  }
-
+ 
   if (!accessToken) {
     return (
       <div>
