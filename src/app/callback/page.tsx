@@ -14,11 +14,12 @@ const CallbackPage = ({
 
   //const state = searchParams?.state || '';
   const tempToken = searchParams?.tempToken || '';
+  const accessToken = '' + searchParams?.accessToken || '';
 
   const router = useRouter()
 
 
-  const [accessToken, setAccessToken] = useState('');
+  const [accessTokenParam, setAccessTokenParam] = useState('');
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -40,7 +41,7 @@ const CallbackPage = ({
 
       if (getTokenResponse.status === 200) {
         const { accessToken } = await getTokenResponse.json();
-        setAccessToken(accessToken);
+        setAccessTokenParam(accessToken);
         localStorage.setItem('accessToken', accessToken);
         router.push('/dashboard');
 
@@ -57,17 +58,20 @@ const CallbackPage = ({
         // }
 
         //Store the access token in a localstorage
-        
+
       }
     };
 
     if (tempToken) {
       fetchToken();
+    } else if (accessToken) {
+      localStorage.setItem('accessToken', accessToken);
+      router.push('/dashboard');
     }
-  }, [tempToken, router]);
+  }, [tempToken, router, accessToken]);
 
- 
-  if (!accessToken) {
+
+  if (!accessTokenParam && !accessToken) {
     return (
       <div>
         <h1>Unauthorized access</h1>
