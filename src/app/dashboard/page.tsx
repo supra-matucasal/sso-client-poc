@@ -10,7 +10,6 @@ const DashboardPage = () => {
   }
   const accessToken = cookieStore.get(cookieName)
 
-
   return (
     <div>
       <h1>Dashboard</h1>

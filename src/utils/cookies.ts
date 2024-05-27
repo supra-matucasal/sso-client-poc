@@ -1,4 +1,6 @@
 import { cookies } from "next/headers";
+import { setCookie as cookiesNextSetCookie } from 'cookies-next';
+
 
 const cookieMaxAge = process.env.COOKIE_MAX_AGE || '3600';
 const cookieDomain = process.env.COOKIE_DOMAIN || 'localhost';

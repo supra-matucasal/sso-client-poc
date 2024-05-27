@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCookie, setCookie } from './utils/cookies';
 import { verifyToken } from './services/auth';
+import { setCookie as cookiesNextSetCookie } from 'cookies-next';
+
 
 
 const COOKIE_NAME = process.env.COOKIE_NAME;
 const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN;
 const OTHER_COOKIE_NAMES = process.env.OTHER_COOKIE_NAMES?.split(',');
+const COOKIE_MAX_AGE = process.env.COOKIE_MAX_AGE || '3600';
 
 
 export async function middleware(request: NextRequest) {
+
+
   if (!COOKIE_NAME || !COOKIE_DOMAIN || !OTHER_COOKIE_NAMES) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
@@ -20,8 +25,18 @@ export async function middleware(request: NextRequest) {
     for (const cookieName of OTHER_COOKIE_NAMES) {
       const cookieValue = getCookie(cookieName);
       if (cookieValue) {
-        setCookie(COOKIE_NAME, cookieValue);
-        return NextResponse.next();
+        const response = NextResponse.next();
+        response.cookies.set({
+          name: COOKIE_NAME,
+          value: cookieValue,
+          httpOnly: true,
+          sameSite: 'strict',
+          path: '/',
+          domain: COOKIE_DOMAIN,
+          maxAge: +COOKIE_MAX_AGE
+        });
+
+        return response;
       }
     }
 
