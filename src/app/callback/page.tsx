@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'
 
+import axios from 'axios';
 
 const CallbackPage = ({
   params,
@@ -30,23 +31,33 @@ const CallbackPage = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ tempToken }),
+        credentials: 'include',
+        //origin: 'http://localhost:3000',
       });
+
+      //Doing the same request with axios
+      //const getTokenResponse = await axios.post(`${authSSOServer}/api/auth/token`, { tempToken }, { withCredentials: true });
 
       if (getTokenResponse.status === 200) {
         const { accessToken } = await getTokenResponse.json();
         setAccessToken(accessToken);
+        localStorage.setItem('accessToken', accessToken);
+        router.push('/dashboard');
 
-        const setCookie = await fetch('/api/auth/set-cookie', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ accessToken }),
-        });
+        // const setCookie = await fetch('/api/auth/set-cookie', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({ accessToken }),
+        // });
 
-        if (setCookie.status === 200) {
-          router.push('/dashboard');
-        }
+        // if (setCookie.status === 200) {
+        //   router.push('/dashboard');
+        // }
+
+        //Store the access token in a localstorage
+        
       }
     };
 

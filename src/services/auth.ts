@@ -1,9 +1,10 @@
-const AUTH_SSO_SERVER = process.env.AUTH_SSO_SERVER;
+const authSSOServer = process.env.NEXT_PUBLIC_AUTH_SSO_SERVER;
+
 
 
 async function verifyToken(token: string): Promise<boolean> {
   try {
-    const response = await fetch(`${AUTH_SSO_SERVER}/api/auth/me`, {
+    const response = await fetch(`${authSSOServer}/api/auth/me`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
