@@ -1,20 +1,24 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import { useAuth } from '@/context/AuthContext';
+
 
 const DashboardPage = () => {
 
-  const [accessToken, setAccessToken] = useState('');
+  const { user, getUserInfo, accessToken } = useAuth();
 
   useEffect(() => {
-    const accessTokenStorage = window.localStorage.getItem('accessToken');
-    if (accessTokenStorage)
-      setAccessToken(accessTokenStorage);
-  }, []);
+    if (!user) {
+      getUserInfo();
+    }
+  }, [user, getUserInfo]);
 
   return (
     <div>
       <h1>Dashboard</h1>
+      <h1>Welcome, {user ? user.first_name + ' - ' + user.email : 'Guest'}</h1>
+
       <p>Access Token: {accessToken ? accessToken : 'No access token available'}</p>
     </div>
   );

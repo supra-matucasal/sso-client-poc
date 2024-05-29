@@ -16,8 +16,31 @@ async function verifyToken(token: string): Promise<boolean> {
   }
 }
 
+async function fetchUserInfo(token: string): Promise<boolean> {
+  try {
+    const response = await fetch(`${authSSOServer}/api/auth/me`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if(response.status !== 200) {
+      return false;
+    }
+    const data = await response.json();
+    console.log('Data from me', data.user.data)
+    return data?.user?.data;
+
+  } catch (error) {
+    console.error('Error verifying token:', error);
+    return false;
+  }
+}
+
+
 
 
 export {
-  verifyToken
+  verifyToken,
+  fetchUserInfo
 }
