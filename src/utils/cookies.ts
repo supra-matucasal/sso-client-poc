@@ -22,3 +22,8 @@ export const getCookie = (cookieName: string) => {
   return cookies().get(cookieName)?.value;
 };
 
+
+export const removeCookie = (cookieName: string) => {
+  cookies().delete(cookieName);
+}
+
