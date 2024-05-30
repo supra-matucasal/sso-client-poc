@@ -63,7 +63,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   //   sameSite: 'strict',
   // })
 
-  setCookie('session', accessToken)
+  setCookie(process.env.SESSION_NAME || 'session', accessToken)
 
 
   return permanentRedirect(`/dashboard`);
