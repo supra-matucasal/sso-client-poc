@@ -6,7 +6,7 @@ import { AuthProvider } from '../../context/AuthContext';
 const ProtectedLayout = ({ children }: { children: ReactNode }) => {
 
 
-  const session = getCookie('session');
+  const session = getCookie(process.env.SESSION_NAME || 'session');
 
   if (!session) {
     return <div>Not authenticated</div>;
