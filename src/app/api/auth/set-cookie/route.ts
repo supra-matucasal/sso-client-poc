@@ -25,7 +25,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   //   maxAge: +cookieMaxAge
   // });
   
-  const cookieName = process.env.COOKIE_NAME || 'sso-token-client1'
+  const cookieName = 'sso-token-client1'
   setCookie(cookieName, accessToken);
 
   return NextResponse.json({ message: 'Cookie stored' }, { status: 200 });
