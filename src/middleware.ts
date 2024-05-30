@@ -5,15 +5,15 @@ import { verifyToken } from './services/auth';
 
 
 
-const COOKIE_NAME = process.env.COOKIE_NAME;
-const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN;
+// const COOKIE_NAME = process.env.COOKIE_NAME;
+// const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN;
 
 export async function middleware(request: NextRequest) {
 
 
-  if (!COOKIE_NAME || !COOKIE_DOMAIN) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
+  // if (!COOKIE_NAME || !COOKIE_DOMAIN) {
+  //   return NextResponse.redirect(new URL('/login', request.url));
+  // }
 
   //let ownCookie = getCookie(COOKIE_NAME);
   //let isValidToken = false;
