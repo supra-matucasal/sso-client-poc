@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
-const cookieMaxAge = process.env.COOKIE_MAX_AGE || '3600';
-const cookieDomain = process.env.COOKIE_DOMAIN || 'localhost';
+const cookieMaxAge = process.env.SESSION_COOKIE_MAX_AGE || '3600';
+const cookieDomain = process.env.SESSION_COOKIE_DOMAIN || 'localhost';
 
 export const setCookie = (cookieName: string, value: string) => {
 

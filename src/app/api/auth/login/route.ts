@@ -16,11 +16,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
     if (session) {
       const code = Math.random().toString(36).substring(7);
       const redirectWithState = `${redirect_url}?state=${state}&code=${code}`;
-      return NextResponse.redirect(redirectWithState, { status: 301 });
+      return NextResponse.redirect(redirectWithState);
     }
   }
 
 
-  return NextResponse.redirect(`${process.env.AUTH_SSO_SERVER}/api/auth/authorize?client_id=${client_id}&redirect_url=${redirect_url}&state=${state}`, { status: 301 });
+  return NextResponse.redirect(`${process.env.AUTH_SSO_SERVER}/api/auth/authorize?client_id=${client_id}&redirect_url=${redirect_url}&state=${state}`);
+
 
 }

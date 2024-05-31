@@ -1,9 +1,7 @@
-import { setCookie } from "@/utils/cookies";
-import { cookies, headers } from "next/headers";
-import { permanentRedirect } from "next/navigation";
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
 
   console.log('callback route...')
 
@@ -30,10 +28,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
   const response = await fetch(`${process.env.AUTH_SSO_SERVER}/api/auth/token`, {
     method: 'POST',
-    // headers: {
-    //   'Content-Type': 'application/json',
-    // },
     headers: headers(),
+    credentials: 'include',
     body: JSON.stringify({ code, client_id, redirect_url, client_secret }),
 
   });
@@ -44,28 +40,17 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
   const { accessToken } = await response.json();
 
-  console.log('trying to set the cookie in the client', accessToken)
+  const res = NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`);
+  res.cookies.set({
+    name: process.env.SESSION_NAME || 'session',
+    value: accessToken,
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== 'development',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 3600,
+  });
 
-  //Store the access token in a cookie of this project - set domain of this project - strict same site
-  // cookies().set({
-  //   name: 'sso-client-access-token',
-  //   value: accessToken,
-  //   sameSite: 'strict',
-  //   httpOnly: true,
-  //   path: '/',
-  // })
-
-  // cookies().set('session', accessToken, {
-  //   httpOnly: true,
-  //   secure: process.env.NODE_ENV === 'production',
-  //   maxAge: 60 * 60 * 24 * 7, // One week
-  //   path: '/',
-  //   sameSite: 'strict',
-  // })
-
-  setCookie(process.env.SESSION_NAME || 'session', accessToken)
-
-
-  return permanentRedirect(`/dashboard`);
+  return res;
 
 }
