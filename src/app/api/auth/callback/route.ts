@@ -26,24 +26,39 @@ export async function GET(req: NextRequest) {
   const redirect_url = process.env.AUTH_REDIRECT_URL;
   const client_secret = process.env.AUTH_SSO_CLIENT_SECRET;
 
+  console.log('Trying to call this: ', `${process.env.AUTH_SSO_SERVER}/api/auth/token?code=${code}&client_id=${client_id}&redirect_uri=${redirect_url}&client_secret=${client_secret}`)
+
+  // const response = await fetch(`${process.env.AUTH_SSO_SERVER}/api/auth/token?code=${code}&client_id=${client_id}&redirect_uri=${redirect_url}&client_secret=${client_secret}`, {
+  //   method: 'POST',
+  //   headers: headers(),
+  //   credentials: 'include',
+  // });
+  const params = new URLSearchParams();
+  params.append('code', code);
+  params.append('client_id', client_id || '');
+  params.append('redirect_uri', redirect_url || '');
+  params.append('client_secret', client_secret || '');
+  params.append('grant_type', 'authorization_code');
+
   const response = await fetch(`${process.env.AUTH_SSO_SERVER}/api/auth/token`, {
     method: 'POST',
-    headers: headers(),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: params,
     credentials: 'include',
-    body: JSON.stringify({ code, client_id, redirect_url, client_secret }),
-
   });
 
   if (response.status !== 200) {
     return new NextResponse(JSON.stringify({ error: 'Invalid code' }), { status: 400 });
   }
 
-  const { accessToken } = await response.json();
+  const { access_token } = await response.json();
 
   const res = NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`);
   res.cookies.set({
     name: process.env.SESSION_NAME || 'session',
-    value: accessToken,
+    value: access_token,
     httpOnly: true,
     secure: process.env.NODE_ENV !== 'development',
     sameSite: 'lax',

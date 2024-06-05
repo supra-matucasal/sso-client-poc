@@ -28,8 +28,8 @@ async function fetchUserInfo(token: string): Promise<boolean> {
       return false;
     }
     const data = await response.json();
-    console.log('Data from me', data.user.data)
-    return data?.user?.data;
+    console.log('Data from me', data)
+    return data;
 
   } catch (error) {
     console.error('Error verifying token:', error);

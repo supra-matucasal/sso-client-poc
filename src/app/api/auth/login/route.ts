@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   }
 
 
-  return NextResponse.redirect(`${process.env.AUTH_SSO_SERVER}/api/auth/authorize?client_id=${client_id}&redirect_url=${redirect_url}&state=${state}`);
+  return NextResponse.redirect(`${process.env.AUTH_SSO_SERVER}/api/auth/authorize?client_id=${client_id}&redirect_uri=${redirect_url}&state=${state}`);
 
 
 }

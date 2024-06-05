@@ -7,7 +7,10 @@ const allowedOrigins = [
   'http://app1.local:4000',
   'http://app2.local:5000',
   'http://127.0.0.1:4000',
-  'http://127.0.0.1:5000'
+  'http://127.0.0.1:5000',
+  'http://127.0.0.1:80',
+  'http://127.0.0.1:8055'
+
 ];
 
 export async function middleware(req: NextRequest) {
