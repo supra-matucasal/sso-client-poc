@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest, res: NextResponse) {
 
 
-  const client_id = 'iGJ1u5DC1n7hB7f63SOl15vweh7hqGZE';
+  const client_id = process.env.AUTH_SSO_CLIENT_ID;
   const redirect_url = process.env.AUTH_REDIRECT_URL;
   const state = 'eyJyZXR1cm5UbyI6Ii9ibGFzdG9mZiJ9';
 

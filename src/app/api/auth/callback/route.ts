@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
   });
 
   if (response.status !== 200) {
-    return new NextResponse(JSON.stringify({ error: 'Invalid code' }), { status: 400 });
+    return new NextResponse(JSON.stringify({ error: 'Invalid call to token' }), { status: 400 });
   }
 
   const { access_token } = await response.json();
